@@ -94,7 +94,7 @@ foreach ($i in $colResults)
         Write-Output "[+] Creating Folder For Deployment : $folerLocation"
         mkdir $folerLocation
 		#Step 2 - Deploy binaries to specified (hardcoded folder) on each host: 
-        Write-Output "[+] Deploing sysmon config and binaries to : $remoteBOX"
+        Write-Output "[+] Deploing sysmon installation binaries to : $remoteBOX"
 		if ($remove -eq $true){
 		try{
 		xcopy /q /y .\tools\Sysmon.exe $folerLocation
