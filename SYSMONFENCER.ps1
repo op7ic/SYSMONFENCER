@@ -97,9 +97,9 @@ foreach ($i in $colResults)
         Write-Output "[+] Deploing sysmon config and binaries to : $remoteBOX"
 		if ($remove -eq $true){
 		try{
-		xcopy /y .\tools\Sysmon.exe $folerLocation
-        xcopy /y .\tools\Sysmon64.exe $folerLocation
-		xcopy /y .\tools\manualSysmonRemoval.bat $folerLocation
+		xcopy /q /y .\tools\Sysmon.exe $folerLocation
+        xcopy /q /y .\tools\Sysmon64.exe $folerLocation
+		xcopy /q /y .\tools\manualSysmonRemoval.bat $folerLocation
 		# Step 3 - execute commands to initialize sysmon removal
 		runcmdRemove($remoteBOX)
 		}catch{
@@ -108,19 +108,19 @@ foreach ($i in $colResults)
 		
 		}elseif ($remove -eq $false){
 		try{
-		  xcopy /y .\tools\Sysmon.exe $folerLocation
-          xcopy /y .\tools\Sysmon64.exe $folerLocation
-          xcopy /y .\tools\sysmonconfig-export.xml $folerLocation
-          xcopy /y .\tools\manualSysmon.bat $folerLocation
+		  xcopy /q /y .\tools\Sysmon.exe $folerLocation
+          xcopy /q /y .\tools\Sysmon64.exe $folerLocation
+          xcopy /q /y .\tools\sysmonconfig-export.xml $folerLocation
+          xcopy /q /y .\tools\manualSysmon.bat $folerLocation
 		  # Step 3 - execute commands to initialize sysmon installation
 		  runcmdInstall($remoteBOX)
 		}catch{
 		Write-Output "[-] Unable to deploy binaries to : $remoteBOX" 
 		}
 		}
-		#Final step - remove folder from each host (SYSMON runs in background). Will reupload data to remove sysmon
+		#Final step - remove folder from each host (SYSMON runs in background). Will reupload data to remove sysmon and use -u command
 		sleep 10
-        del /F /Q $folerLocation
+		Remove-Item $folerLocation -force -recurse
 
 }
 
