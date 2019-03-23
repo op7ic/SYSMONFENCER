@@ -57,12 +57,22 @@ if ($invokePSCMD -ne "2"){
   }
 }# EOF
 
+function help(){
+Write-Host @"
+Usage: powershell .\SYSMONFENCER.ps1 [options]
+
+Options:
+  -remove    Removes SYSMON across the domain
+  -help      Show this help menu
+"@
+}
 
 function deploySYSMONGLOBAL($remove){
 
 
 write-host "-=[ SYSMONFENCER v0.1 ]=-"
 write-host "      by op7ic        "
+
 
 $strFilter = "computer";
 $objDomain = New-Object System.DirectoryServices.DirectoryEntry
@@ -85,41 +95,44 @@ foreach ($i in $colResults)
         mkdir $folerLocation
 		#Step 2 - Deploy binaries to specified (hardcoded folder) on each host: 
         Write-Output "[+] Deploing sysmon config and binaries to : $remoteBOX"
-		if ($remove){
+		if ($remove -eq $true){
 		try{
 		xcopy /y .\tools\Sysmon.exe $folerLocation
         xcopy /y .\tools\Sysmon64.exe $folerLocation
 		xcopy /y .\tools\manualSysmonRemoval.bat $folerLocation
+		# Step 3 - execute commands to initialize sysmon removal
+		runcmdRemove($remoteBOX)
 		}catch{
 		Write-Output "[-] Unable to remove binaries to : $remoteBOX, perform removal manually" 
 		}
 		
-		}else{
+		}elseif ($remove -eq $false){
 		try{
 		  xcopy /y .\tools\Sysmon.exe $folerLocation
           xcopy /y .\tools\Sysmon64.exe $folerLocation
           xcopy /y .\tools\sysmonconfig-export.xml $folerLocation
           xcopy /y .\tools\manualSysmon.bat $folerLocation
+		  # Step 3 - execute commands to initialize sysmon installation
 		  runcmdInstall($remoteBOX)
 		}catch{
 		Write-Output "[-] Unable to deploy binaries to : $remoteBOX" 
 		}
 		}
 		#Final step - remove folder from each host (SYSMON runs in background). Will reupload data to remove sysmon
-		sleep 60
-        del $folerLocation
+		sleep 10
+        del /F /Q $folerLocation
 
 }
 
 }
 
-param (
-    [switch]$remove
-);
-
-
-if ($remove){
- deploySYSMONGLOBAL($remove)
+if($args[0] -eq "-remove"){
+Write-Output "[!] Option selected: SYSMON REMOVAL" 
+deploySYSMONGLOBAL($true)
+}elseif($args[0] -eq "-help"){
+help
 }else{
- deploySYSMONGLOBAL
+Write-Output "[!] Option selected: SYSMON INSTALLATION" 
+deploySYSMONGLOBAL($false)
 }
+
