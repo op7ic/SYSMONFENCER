@@ -16,6 +16,7 @@ VERSION      DATE          AUTHOR
 # Run commands against remote system using WMI or Invoke-Command method. Ugly block of code
 function runcmdRemove ($SYSTEM){
 # Simple test to see if invoke-command works
+try{
 $invokePSCMD = Invoke-Command -ComputerName $SYSTEM -ScriptBlock {1+1}
 
 if ($invokePSCMD -ne "2"){
@@ -24,19 +25,21 @@ if ($invokePSCMD -ne "2"){
   if ($wmicCMD -like "*successful*"){
     write-output "[+] WMIC execution was successful against $SYSTEM"
   }else{
-    # WMI failed, we can try SCHTASKS instead
-    Write-Output "[+] WMI is not allowed against $SYSTEM, attempting SCHTASKS trigger"
-	$today=Get-Date -Format dd/MM/yyyy
-	$timetrigger = (get-date).AddMinutes(3).ToString("HH:mm")
-	schtasks /create /s $SYSTEM /sc once /tn "MONINSTx45" /sd $today /st $timetrigger /tr C:\SYSMONx730185\manualSysmonRemoval.bat /ru "SYSTEM"
+    # WMI failed, we can try PSEXEC instead
+    Write-Output "[+] WMI is not allowed against $SYSTEM, attempting psexec trigger"
+	.\tools\Psexec.exe -accepteula \\$SYSTEM -s -i -d "C:\SYSMONx730185\manualSysmonRemoval.bat"
   }
 }else{ #Invoke-Command can be used
   Invoke-Command -ComputerName $SYSTEM -ScriptBlock {C:\SYSMONx730185\manualSysmonRemoval.bat}
   }
+}catch{
+if($_.Exception.Message -like "*PSRemotingTransportException*"){}
+}
 }# EOF
 
 # Run commands against remote system using WMI or Invoke-Command method. Ugly block of code
 function runcmdInstall ($SYSTEM){
+try{
 # Simple test to see if invoke-command works
 $invokePSCMD = Invoke-Command -ComputerName $SYSTEM -ScriptBlock {1+1}
 
@@ -47,14 +50,15 @@ if ($invokePSCMD -ne "2"){
     write-output "[+] WMIC execution was successful against $SYSTEM"
   }else{
     # WMI failed, we can try SCHTASKS instead
-    Write-Output "[+] WMI is not allowed against $SYSTEM, attempting SCHTASKS trigger"
-	$today=Get-Date -Format dd/MM/yyyy
-	$timetrigger = (get-date).AddMinutes(3).ToString("HH:mm")
-	schtasks /create /s $SYSTEM /sc once /tn "MONINSTx45" /sd $today /st $timetrigger /tr C:\SYSMONx730185\manualSysmon.bat /ru "SYSTEM"
+    Write-Output "[+] WMI is not allowed against $SYSTEM, attempting psexec trigger"
+	.\tools\Psexec.exe -accepteula \\$SYSTEM -s -i -d "C:\SYSMONx730185\manualSysmon.bat"
   }
 }else{ #Invoke-Command can be used
   Invoke-Command -ComputerName $SYSTEM -ScriptBlock {C:\SYSMONx730185\manualSysmon.bat}
   }
+}catch{
+if($_.Exception.Message -like "*PSRemotingTransportException*"){}
+}
 }# EOF
 
 function help(){
@@ -92,26 +96,33 @@ foreach ($i in $colResults)
         #Step 1 - Create remote folder in C$ which we can use for deployment: 
         $folerLocation = "\\$remoteBOX\`C$\$deployerRandomName"
         Write-Output "[+] Creating Folder For Deployment : $folerLocation"
-        mkdir $folerLocation
+        mkdir $folerLocation | out-null
 		#Step 2 - Deploy binaries to specified (hardcoded folder) on each host: 
         Write-Output "[+] Deploing sysmon installation binaries to : $remoteBOX"
 		if ($remove -eq $true){
 		try{
-		xcopy /q /y .\tools\Sysmon.exe $folerLocation
-        xcopy /q /y .\tools\Sysmon64.exe $folerLocation
-		xcopy /q /y .\tools\manualSysmonRemoval.bat $folerLocation
+		 Copy-Item .\tools\Sysmon.exe $folerLocation -Force -ErrorAction SilentlyContinue 
+		 Copy-Item .\tools\Sysmon64.exe $folerLocation -Force -ErrorAction SilentlyContinue 
+		 Copy-Item .\tools\manualSysmonRemoval.bat $folerLocation -Force -ErrorAction SilentlyContinue 
+		#xcopy /q /y .\tools\Sysmon.exe $folerLocation
+        #xcopy /q /y .\tools\Sysmon64.exe $folerLocation
+		#xcopy /q /y .\tools\manualSysmonRemoval.bat $folerLocation
 		# Step 3 - execute commands to initialize sysmon removal
-		runcmdRemove($remoteBOX)
+		 runcmdRemove($remoteBOX)
 		}catch{
 		Write-Output "[-] Unable to remove binaries to : $remoteBOX, perform removal manually" 
 		}
 		
 		}elseif ($remove -eq $false){
 		try{
-		  xcopy /q /y .\tools\Sysmon.exe $folerLocation
-          xcopy /q /y .\tools\Sysmon64.exe $folerLocation
-          xcopy /q /y .\tools\sysmonconfig-export.xml $folerLocation
-          xcopy /q /y .\tools\manualSysmon.bat $folerLocation
+		  Copy-Item .\tools\Sysmon.exe $folerLocation -Force -ErrorAction SilentlyContinue 
+		  Copy-Item .\tools\Sysmon64.exe $folerLocation -Force -ErrorAction SilentlyContinue 
+		  Copy-Item .\tools\sysmonconfig-export.xml $folerLocation -Force -ErrorAction SilentlyContinue 
+		  Copy-Item .\tools\manualSysmon.bat $folerLocation -Force -ErrorAction SilentlyContinue 
+		  #xcopy /q /y .\tools\Sysmon.exe $folerLocation
+          #xcopy /q /y .\tools\Sysmon64.exe $folerLocation
+          #xcopy /q /y .\tools\sysmonconfig-export.xml $folerLocation
+          #xcopy /q /y .\tools\manualSysmon.bat $folerLocation
 		  # Step 3 - execute commands to initialize sysmon installation
 		  runcmdInstall($remoteBOX)
 		}catch{
@@ -120,8 +131,7 @@ foreach ($i in $colResults)
 		}
 		#Final step - remove folder from each host (SYSMON runs in background). Will reupload data to remove sysmon and use -u command
 		sleep 10
-		Remove-Item $folerLocation -force -recurse
-
+		Remove-Item $folerLocation -force -recurse -ErrorAction SilentlyContinue 
 }
 
 }
