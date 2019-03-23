@@ -34,7 +34,7 @@ The script will perform followin actions:
 # TODO
 - [ ] Output to files (json)
 - [ ] Perform hosts checks (i.e. Disk Size etc) before installing Sysmon 
-- [ ] The deployer script to also hide sysmon from service.msc
+- [ ] Add method to also sysmon from service.msc
 - [ ] Add threading to upload procedure
  
 
