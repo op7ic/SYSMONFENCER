@@ -21,7 +21,9 @@ try{
 $invokePSCMD = Invoke-Command -ErrorVariable invokeError -ComputerName $SYSTEM -ScriptBlock {1+1} 2>$null
 
 if ($invokePSCMD -ne "2"){
+
   Write-Output "[+] Invoke-Command is not allowed against $SYSTEM, attempting WMI trigger"
+  
   $wmicCMD = wmic /node:$SYSTEM process call create "C:\SYSMONx730185\manualSysmonRemoval.bat"
   if ($wmicCMD -like "*successful*"){
     write-output "[+] WMIC execution was successful against $SYSTEM"
@@ -149,9 +151,7 @@ foreach ($i in $colResults)
 		sleep 10
 		Remove-Item $folerLocation -force -recurse -ErrorAction SilentlyContinue 
 }
-
 }
-
 if($args[0] -eq "-remove"){
 Write-Output "[!] Option selected: SYSMON REMOVAL" 
 deploySYSMONGLOBAL($true)
