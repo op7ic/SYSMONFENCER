@@ -78,10 +78,10 @@ $toolsReq = @('Sysmon.exe','Sysmon64.exe','Psexec.exe','Psexec64.exe')
 for ($i=0; $i -lt $toolsReq.length; $i++) {
 	$location = join-path ".\tools" $toolsReq[$i]
 	if(!(test-path $location)) {
-	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 	$url = "https://live.sysinternals.com/"+$toolsReq[$i]
 	try{
-	 $req = Invoke-WebRequest -Uri $url -OutFile "$autorunsPath" -ErrorAction:Stop -TimeoutSec 10
+	 $req = Invoke-WebRequest -Uri $url -OutFile "$location" -ErrorAction:Stop -TimeoutSec 10
+	 Write-Host "[+] Tool downloaded and stored in tools folder"
 	 }catch {
 	 Write-Host @"
 	 [!] Tool are missing and unable to download. Please download following and place it in "tools" folder
