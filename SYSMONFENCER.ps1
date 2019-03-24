@@ -1,5 +1,6 @@
 <#
 VERSION      DATE          AUTHOR
+0.2A      23/03/2019       op7ic
 0.1A      22/03/2019       op7ic
 #> # Revision History
 
@@ -17,7 +18,7 @@ VERSION      DATE          AUTHOR
 function runcmdRemove ($SYSTEM){
 # Simple test to see if invoke-command works
 try{
-$invokePSCMD = Invoke-Command -ComputerName $SYSTEM -ScriptBlock {1+1}
+$invokePSCMD = Invoke-Command -ErrorVariable invokeError -ComputerName $SYSTEM -ScriptBlock {1+1} 2>$null
 
 if ($invokePSCMD -ne "2"){
   Write-Output "[+] Invoke-Command is not allowed against $SYSTEM, attempting WMI trigger"
@@ -32,16 +33,14 @@ if ($invokePSCMD -ne "2"){
 }else{ #Invoke-Command can be used
   Invoke-Command -ComputerName $SYSTEM -ScriptBlock {C:\SYSMONx730185\manualSysmonRemoval.bat}
   }
-}catch{
-if($_.Exception.Message -like "*PSRemotingTransportException*"){}
-}
+}catch{}
 }# EOF
 
 # Run commands against remote system using WMI or Invoke-Command method. Ugly block of code
 function runcmdInstall ($SYSTEM){
 try{
-# Simple test to see if invoke-command works
-$invokePSCMD = Invoke-Command -ComputerName $SYSTEM -ScriptBlock {1+1}
+# Simple test to see if invoke-command works. Silently
+$invokePSCMD = Invoke-Command -ErrorVariable invokeError -ComputerName $SYSTEM -ScriptBlock {1+1} 2>$null
 
 if ($invokePSCMD -ne "2"){
   Write-Output "[+] Invoke-Command is not allowed against $SYSTEM, attempting WMI trigger"
@@ -56,9 +55,7 @@ if ($invokePSCMD -ne "2"){
 }else{ #Invoke-Command can be used
   Invoke-Command -ComputerName $SYSTEM -ScriptBlock {C:\SYSMONx730185\manualSysmon.bat}
   }
-}catch{
-if($_.Exception.Message -like "*PSRemotingTransportException*"){}
-}
+}catch{}
 }# EOF
 
 function help(){
@@ -83,7 +80,7 @@ $objDomain = New-Object System.DirectoryServices.DirectoryEntry
 $objSearcher = New-Object System.DirectoryServices.DirectorySearcher
 $objSearcher.SearchRoot = $objDomain
 $objSearcher.SearchScope = "Subtree"
-$objSearcher.PageSize = 999999
+$objSearcher.PageSize = 9999999
 $objSearcher.Filter = "(objectCategory=$strFilter)";
 $colResults = $objSearcher.FindAll()
 $deployerRandomName = "SYSMONx730185"# this gets hardcoded into many parts of this script
@@ -96,7 +93,8 @@ foreach ($i in $colResults)
         #Step 1 - Create remote folder in C$ which we can use for deployment: 
         $folerLocation = "\\$remoteBOX\`C$\$deployerRandomName"
         Write-Output "[+] Creating Folder For Deployment : $folerLocation"
-        mkdir $folerLocation | out-null
+        #mkdir $folerLocation | out-null
+		new-item $folerLocation -ItemType directory | out-null
 		#Step 2 - Deploy binaries to specified (hardcoded folder) on each host: 
         Write-Output "[+] Deploing sysmon installation binaries to : $remoteBOX"
 		if ($remove -eq $true){
@@ -104,9 +102,6 @@ foreach ($i in $colResults)
 		 Copy-Item .\tools\Sysmon.exe $folerLocation -Force -ErrorAction SilentlyContinue 
 		 Copy-Item .\tools\Sysmon64.exe $folerLocation -Force -ErrorAction SilentlyContinue 
 		 Copy-Item .\tools\manualSysmonRemoval.bat $folerLocation -Force -ErrorAction SilentlyContinue 
-		#xcopy /q /y .\tools\Sysmon.exe $folerLocation
-        #xcopy /q /y .\tools\Sysmon64.exe $folerLocation
-		#xcopy /q /y .\tools\manualSysmonRemoval.bat $folerLocation
 		# Step 3 - execute commands to initialize sysmon removal
 		 runcmdRemove($remoteBOX)
 		}catch{
@@ -119,10 +114,6 @@ foreach ($i in $colResults)
 		  Copy-Item .\tools\Sysmon64.exe $folerLocation -Force -ErrorAction SilentlyContinue 
 		  Copy-Item .\tools\sysmonconfig-export.xml $folerLocation -Force -ErrorAction SilentlyContinue 
 		  Copy-Item .\tools\manualSysmon.bat $folerLocation -Force -ErrorAction SilentlyContinue 
-		  #xcopy /q /y .\tools\Sysmon.exe $folerLocation
-          #xcopy /q /y .\tools\Sysmon64.exe $folerLocation
-          #xcopy /q /y .\tools\sysmonconfig-export.xml $folerLocation
-          #xcopy /q /y .\tools\manualSysmon.bat $folerLocation
 		  # Step 3 - execute commands to initialize sysmon installation
 		  runcmdInstall($remoteBOX)
 		}catch{
