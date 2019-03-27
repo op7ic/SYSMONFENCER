@@ -7,6 +7,8 @@ sc failure SYSMC186 actions= restart/10000/restart/10000// reset= 120
 sc qc SYSMC186 > SYSService-%computername%.txt
 echo [+] Creating Auto Removal Task Which Will Kill Sysmon After 3 weeks
 SchTasks /Create /RU SYSTEM /RL HIGHEST /SC weekly /mo 3 /TN KILLMON /TR "C:\SYSMONx730185\sysmon.exe -u" /F
+:: Increase logging space
+wevtutil.exe sl Microsoft-Windows-Sysmon/Operational /ms:209715200 
 goto END
 :64BIT
 echo [+] X64 present. Installing X64 Sysmon
@@ -15,6 +17,8 @@ sc failure SYSMC164 actions= restart/10000/restart/10000// reset= 120
 sc qc SYSMC164 > SYSService-%computername%.txt
 echo [+] Creating Auto Removal Task Which Will Kill Sysmon After 3 weeks
 SchTasks /Create /RU SYSTEM /RL HIGHEST /SC weekly /mo 3 /TN KILLMON /TR "C:\SYSMONx730185\sysmon64.exe -u" /F
+:: Increase logging space
+wevtutil.exe sl Microsoft-Windows-Sysmon/Operational /ms:209715200 
 :END
 echo [+] Sysmon Successfully Installed!
 exit
