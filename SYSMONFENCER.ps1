@@ -12,6 +12,7 @@ VERSION      DATE          AUTHOR
     SYSMONFENCER.ps1
   .HELP 
     Add -remove parameter to remove installed SYSMON globally
+	Add -collect parameter to collect SYSMON logs globally
 #>
 
 # Run commands against remote system using WMI or Invoke-Command method. Ugly block of code
@@ -66,8 +67,48 @@ Usage: powershell .\SYSMONFENCER.ps1 [options]
 
 Options:
   -remove    Removes SYSMON across the domain
+  -collect   Collects SYSMON logs across domain and store in local folder ./output
   -help      Show this help menu
 "@
+}
+
+
+function collectSYSMONGLOBAL(){
+$strFilter = "computer";
+$objDomain = New-Object System.DirectoryServices.DirectoryEntry
+$objSearcher = New-Object System.DirectoryServices.DirectorySearcher
+$objSearcher.SearchRoot = $objDomain
+$objSearcher.SearchScope = "Subtree"
+$objSearcher.PageSize = 9999999
+$objSearcher.Filter = "(objectCategory=$strFilter)";
+$colResults = $objSearcher.FindAll()
+$pathCollectionFolder = "./output"# this gets hardcoded into many parts of this script
+
+# check if folder exist and create if needed
+if([System.IO.File]::Exists($pathCollectionFolder)){
+    foreach ($i in $colResults)
+	{
+        $objComputer = $i.GetDirectoryEntry()
+        $remoteBOX = $objComputer.Name
+        #Step 1 - Pick up box and pull out sysmon logs: 
+        $fileLocation = "\\$remoteBOX\`C$\Windows\System32\winevt\Logs\Microsoft-Windows-Sysmon%4Operational.evtx"
+		$destination = "./$pathCollectionFolder/$remoteBOX-SYSMON.evtx"
+		Copy-Item $fileLocation $destination -Force -ErrorAction SilentlyContinue 
+		
+	}
+}else{
+	# create folder
+	new-item $pathCollectionFolder -ItemType directory | out-null
+	foreach ($i in $colResults)
+	{
+        $objComputer = $i.GetDirectoryEntry()
+        $remoteBOX = $objComputer.Name
+        #Step 1 - Pick up box and pull out sysmon logs: 
+        $fileLocation = "\\$remoteBOX\`C$\Windows\System32\winevt\Logs\Microsoft-Windows-Sysmon%4Operational.evtx"
+		$destination = "./$pathCollectionFolder/$remoteBOX-SYSMON.evtx"
+		Copy-Item $fileLocation $destination -Force -ErrorAction SilentlyContinue 
+	}
+}
 }
 
 function deploySYSMONGLOBAL($remove){
@@ -157,6 +198,8 @@ Write-Output "[!] Option selected: SYSMON REMOVAL"
 deploySYSMONGLOBAL($true)
 }elseif($args[0] -eq "-help"){
 help
+}elseif($args[0] -eq "-collect") {
+collectSYSMONGLOBAL
 }else{
 Write-Output "[!] Option selected: SYSMON INSTALLATION" 
 deploySYSMONGLOBAL($false)
