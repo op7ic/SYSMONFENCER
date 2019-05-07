@@ -1,5 +1,5 @@
 # Overview
-This is a simple PowerShell script which will enumerate the domain, deploy and run Sysmon monitor across every reachable system. The objective of this script is to be able to deploy and run Sysmon monitor for a number of days as part of Threat Hunting activity where other telemetry collection methods are not available or it is too difficult to deploy Sysmon via SCCM or GPO.  
+This is a simple PowerShell script which will enumerate, deploy and run Sysmon monitor across every domain-connected system. The objective of this script is to be able to deploy and run Sysmon monitor for a number of days as part of Threat Hunting activity where other telemetry collection methods are not available and deployment is difficult.  
 
 # Running
 
