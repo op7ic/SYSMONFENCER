@@ -114,7 +114,7 @@ if([System.IO.File]::Exists($pathCollectionFolder)){
 function deploySYSMONGLOBAL($remove){
 
 
-write-host "-=[ SYSMONFENCER v0.1 ]=-"
+write-host "-=[ SYSMONFENCER 0.2A ]=-"
 write-host "      by op7ic        "
 
 $toolsReq = @('Sysmon.exe','Sysmon64.exe','Psexec.exe','Psexec64.exe')
