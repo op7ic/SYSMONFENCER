@@ -1,5 +1,5 @@
 # Overview
-This is a simple PowerShell script which will attempd to deploy Sysmon across every domain-connected system. The objective of this script is to be able to deploy, run and collect Sysmoin monitor log as part of Threat Hunting activity where other telemetry collection methods are not available and or using other deployment methods might be difficult.  
+This is a simple PowerShell script which will attempd to deploy Sysmon across every domain-connected system. The objective of this script is to be able to deploy, run and collect Sysmon monitor log as part of Threat Hunting activity where other telemetry collection methods are not available and or using other deployment methods might be difficult.  
 
 # Running
 
@@ -17,8 +17,8 @@ From command line it should be run as follows:
 Usage: powershell .\SYSMONFENCER.ps1 [options]
 
 Options:
-  -remove    Removes SYSMON across the domain
-  -collect   Collects sysmon evtx files and stores them in output directory
+  -remove    Remove SYSMON across the domain
+  -collect   Collect sysmon evtx files and store them in output directory
   -help      Show this help menu
 ```
 
