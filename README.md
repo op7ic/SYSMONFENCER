@@ -1,9 +1,9 @@
 # Overview
-This is a simple PowerShell script which will enumerate, deploy and run Sysmon monitor across every domain-connected system. The objective of this script is to be able to deploy and run Sysmon monitor for a number of days as part of Threat Hunting activity where other telemetry collection methods are not available and deployment is difficult.  
+This is a simple PowerShell script which will attempd to deploy Sysmon across every domain-connected system. The objective of this script is to be able to deploy, run and collect Sysmoin monitor log as part of Threat Hunting activity where other telemetry collection methods are not available and or using other deployment methods might be difficult.  
 
 # Running
 
-Run ```SYSMONFENCER.ps1``` as domain administrator on domain connected system. Deployment scripts and copy of Sysmon will be uploaded from ```tools/``` directory. **You need to download Sysmon.exe, Sysmon64.exe, Psexec.exe, PSexec64.exe from sysinternals website and place them in "tools" directory.**
+Run ```SYSMONFENCER.ps1``` as domain administrator on domain connected system. Deployment scripts and Sysmon installation files will be uploaded from ```tools/``` directory. **You need to download Sysmon.exe, Sysmon64.exe, Psexec.exe, PSexec64.exe from sysinternals website and place them in "tools" directory if the script will fail to download these files.**
 
 From command line it should be run as follows: 
 ```powershell.exe -nop -exec bypass .\SYSMONFENCER.ps1```
