@@ -23,7 +23,7 @@ Options:
 ```
 
 # Workflow
-
+```
 +------------+       +-----------+
 |            |       |           |
 |  Threat    +------>+  Deploy   |
@@ -43,7 +43,7 @@ Options:
                      |  Remove   |
                      |  Sysmon   |
                      +-----------+
-
+```
 
 # Process
 The script will perform following actions:
