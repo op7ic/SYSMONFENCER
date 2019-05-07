@@ -22,6 +22,29 @@ Options:
   -help      Show this help menu
 ```
 
+# Workflow
+
++------------+       +-----------+
+|            |       |           |
+|  Threat    +------>+  Deploy   |
+|  Hunt      |       |  Sysmon   |
++------------+       +-----+-----+
+                           |
+                           |
+                     +-----v-----+
+                     |           |
+                     |  Collect  +<------+
+                     |  Logs     |       |Repeat
+                     +-----+-----+-------+
+                           |
+                           |
+                     +-----v-----+
+                     |           |
+                     |  Remove   |
+                     |  Sysmon   |
+                     +-----------+
+
+
 # Process
 The script will perform following actions:
 
