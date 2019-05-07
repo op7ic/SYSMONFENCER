@@ -11,7 +11,7 @@ From command line it should be run as follows:
 # Help
 
 ```
--=[ SYSMONFENCER v0.1 ]=-
+-=[ SYSMONFENCER v0.2 ]=-
         by op7ic
 
 Usage: powershell .\SYSMONFENCER.ps1 [options]
