@@ -25,6 +25,7 @@ Options:
 # Process
 The script will perform following actions:
 
+* Attempt to download Sysmon and Psexec from live.sysinternals.com
 * Enumerate LDAP structure of the current domain and identify any object matching 'computer' filter. This is done using "System.DirectoryServices.DirectorySearcher" method.
 * For each identified system, create unique folder in "C$" network share, copy sysmon config and sysmon installer script into this folder and run quiet installation procedure. 
 * The script will use WinRM, WMI and PSEXEC to try to execute remote installation of Sysmon. If all three methods fail then no installation will be performed. 
