@@ -18,7 +18,7 @@ Usage: powershell .\SYSMONFENCER.ps1 [options]
 
 Options:
   -remove    Removes SYSMON across the domain
-  -collect   Collcects sysmon evtx files and stores them in output directory
+  -collect   Collects sysmon evtx files and stores them in output directory
   -help      Show this help menu
 ```
 
