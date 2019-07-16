@@ -12,7 +12,7 @@ VERSION      DATE          AUTHOR
 
 <#
   .SYNOPSIS
-    Deploys SYSMON across the domain. WARNING: This script needs to run with Domain Admin privilages
+    Deploys SYSMON across the domain. WARNING: This script needs to run with Domain Admin privilages on domain connected system
   .EXAMPLE
     SYSMONFENCER.ps1
   .HELP 
