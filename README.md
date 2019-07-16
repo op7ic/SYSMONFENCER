@@ -3,7 +3,7 @@ This is a simple PowerShell script which will attempd to deploy Sysmon across ev
 
 # Running
 
-Run ```SYSMONFENCER.ps1``` as domain administrator on domain connected system. Deployment scripts and Sysmon installation files will be uploaded from ```tools/``` directory. **You need to download Sysmon.exe, Sysmon64.exe, Psexec.exe, PSexec64.exe from sysinternals website and place them in "tools" directory if the script will fail to download these files.**
+Run ```SYSMONFENCER.ps1``` as domain administrator on domain connected system. Deployment scripts and Sysmon installation files will be uploaded from ```tools/``` directory. **You need to download Sysmon.exe, Sysmon64.exe, Psexec.exe, PSexec64.exe from sysinternals website and place them in "tools" directory. 
 
 From command line it should be run as follows: 
 ```powershell.exe -nop -exec bypass .\SYSMONFENCER.ps1```
@@ -48,7 +48,6 @@ Options:
 # Process
 The script will perform following actions:
 
-* Attempt to download Sysmon and Psexec from live.sysinternals.com
 * Enumerate LDAP structure of the current domain and identify any object matching 'computer' filter. This is done using "System.DirectoryServices.DirectorySearcher" method.
 * For each identified system, create unique folder in "C$" network share, copy sysmon config and sysmon installer script into this folder and run quiet installation procedure. 
 * The script will use WinRM, WMI and PSEXEC to try to execute remote installation of Sysmon. If all three methods fail then no installation will be performed. 
