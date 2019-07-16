@@ -66,8 +66,8 @@ The script will perform following actions:
 # TODO
 - [ ] Perform hosts checks (i.e. Disk Size etc) before installing Sysmon 
 - [ ] Add method to hide sysmon from service.msc
-- [ ] Add threading to main procedures
-- [ ] Clean up code and make it look prettier
+- [x] Add threading to main procedures
+- [x] Clean up code and make it look prettier
 - [ ] Add .NET implementation so its simple point & click
 
 
