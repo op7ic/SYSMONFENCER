@@ -69,5 +69,6 @@ The script will perform following actions:
 - [x] Add threading to main procedures
 - [x] Clean up code and make it look prettier
 - [ ] Add .NET implementation so its simple point & click
+- [ ] Add error handling code to upload/download routines
 
 
