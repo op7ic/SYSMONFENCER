@@ -2,8 +2,8 @@
 echo [+] Detecting OS processor type
 if "%PROCESSOR_ARCHITECTURE%"=="AMD64" goto 64BIT
 echo [+] X86 present. Installing X86 Sysmon
-SET SYSMONDIR=C:\windows\sysmon64.exe
-IF Not EXIST %SYSMONDIR% (
+SET SYSMONDIR86=C:\windows\sysmon.exe
+IF Not EXIST %SYSMONDIR86% (
 C:\SYSMONx730185\sysmon.exe -n -l -d SYSMC186 -accepteula -i C:\SYSMONx730185\sysmonconfig-export.xml
 sc failure SYSMC186 actions= restart/10000/restart/10000// reset= 120
 sc qc SYSMC186 > SYSService-%computername%.txt
