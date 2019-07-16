@@ -1,6 +1,10 @@
 <#
 VERSION      DATE          AUTHOR
 0.4A      14/07/2019       op7ic
+- Threading added
+- Safety measures added
+- Removal checks
+- Log collection improvements
 0.2A      23/03/2019       op7ic
 0.1A      22/03/2019       op7ic
 #> # Revision History
