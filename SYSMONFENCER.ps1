@@ -225,10 +225,8 @@ Remove-Job -State Completed
 }
 
 function enumDomainObjects{
-
 write-host "-=[ SYSMONFENCER 0.4A ]=-"
 write-host "      by op7ic        "
-
 
 # Enumerate systems connected to domain
 $strFilter = "computer";
@@ -239,7 +237,6 @@ $objSearcher.SearchScope = "Subtree"
 $objSearcher.PageSize = 9999999
 $objSearcher.Filter = "(objectCategory=$strFilter)";
 $colResults = $objSearcher.FindAll()
-
 $serverListArray = [System.Collections.ArrayList]@()
 foreach ($i in $colResults)
 {
@@ -249,7 +246,7 @@ foreach ($i in $colResults)
 		$serverListArray.Add($remoteBOX) | out-null
 }
 return $serverListArray
-}#EOF deploySYSMONGLOBAL
+}
 
 
 $serverListArray = enumDomainObjects
