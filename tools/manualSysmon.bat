@@ -11,6 +11,7 @@ echo [+] Creating Auto Removal Task Which Will Kill Sysmon After 3 weeks
 SchTasks /Create /RU SYSTEM /RL HIGHEST /SC weekly /mo 3 /TN KILLMON /TR "C:\SYSMONx730185\sysmon.exe -u" /F
 :: Increase logging space
 wevtutil.exe sl Microsoft-Windows-Sysmon/Operational /ms:209715200
+echo [+] Sysmon Successfully Installed!
 ) 
 goto END
 :64BIT
@@ -23,8 +24,8 @@ sc qc SYSMC164 > SYSService-%computername%.txt
 echo [+] Creating Auto Removal Task Which Will Kill Sysmon After 3 weeks
 SchTasks /Create /RU SYSTEM /RL HIGHEST /SC weekly /mo 3 /TN KILLMON /TR "C:\SYSMONx730185\sysmon64.exe -u" /F
 :: Increase logging space
-wevtutil.exe sl Microsoft-Windows-Sysmon/Operational /ms:209715200 
+wevtutil.exe sl Microsoft-Windows-Sysmon/Operational /ms:209715200
+echo [+] Sysmon Successfully Installed!
 )
 :END
-echo [+] Sysmon Successfully Installed!
 exit
