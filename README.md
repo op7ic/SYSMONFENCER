@@ -17,7 +17,7 @@ From command line it should be run as follows:
 Usage: powershell .\SYSMONFENCER.ps1 [options]
 
 Options:
-  (no option) Install SYSMON on every single system
+  -install   Install SYSMON across the domain
   -remove    Remove SYSMON across the domain
   -collect   Collect sysmon evtx files and store them in output directory
   -help      Show this help menu

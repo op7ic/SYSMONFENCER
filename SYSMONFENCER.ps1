@@ -25,12 +25,13 @@ Write-Host @"
 Usage: powershell .\SYSMONFENCER.ps1 [options]
 
 Options:
+  -install   Install SYSMON across the domain
   -remove    Removes SYSMON across the domain
   -collect   Collects SYSMON logs across domain and store in local folder ./output
   -help      Show this help menu
 "@
 }
-
+# Install
 function fancyDeploy($serverListArray){
 
 foreach ($remoteServer in $serverListArray){
@@ -104,7 +105,7 @@ foreach($job in Get-Job)
 }
 Remove-Job -State Completed
 }
-
+# Removal
 function fancyRemoval($serverListArray){
 foreach ($remoteServer in $serverListArray){
 # control running jobs, max 4 
@@ -261,7 +262,7 @@ help
 Write-Output "[!] Option selected: SYSMON LOG COLLECTION" 
 write-host "[+] Enumerating domain & collecting Sysmon logs"
 fancyCollect $serverListArray
-}else{
+}elseif($args[0] -eq "-install") 
 Write-Output "[!] Option selected: SYSMON INSTALLATION" 
 write-host "[+] Enumerating domain & installing Sysmon across every system"
 fancyDeploy $serverListArray
