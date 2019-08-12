@@ -1,4 +1,18 @@
 @echo off
+REM Disk size check. We use 6GB as minimum free space on C partition
+:: Checking Disk Size (min 6GB) - this is arbitrary
+set DriveLimit=600000000
+for /f "usebackq delims== tokens=2" %%x in (`wmic logicaldisk where "DeviceID='C:'" get FreeSpace /format:value`) do set FreeSpace=%%x
+Echo FreeSpace="%FreeSpace%"
+Echo Limit="%DriveLimit%"
+If %FreeSpace% GTR %DriveLimit% (
+ echo "enough free space"
+) else (
+ Echo [-] Not enough free space. Exit
+ echo fail > SYSService-%computername%.txt
+ exit
+)
+
 echo [+] Detecting OS processor type
 if "%PROCESSOR_ARCHITECTURE%"=="AMD64" goto 64BIT
 echo [+] X86 present. Installing X86 Sysmon
