@@ -64,7 +64,7 @@ The script will perform following actions:
 * Sysmon config copied from https://github.com/SwiftOnSecurity/sysmon-config
 
 # TODO
-- [ ] Perform hosts checks (i.e. Disk Size etc) before installing Sysmon 
+- [x] Perform hosts checks (i.e. Disk Size etc) before installing Sysmon. Check if 6GB of space exists on C parition before executing Sysmon
 - [ ] Add method to hide sysmon from service.msc
 - [x] Add threading to main procedures
 - [x] Clean up code and make it look prettier
