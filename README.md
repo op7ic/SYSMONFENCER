@@ -3,7 +3,7 @@ This is a simple PowerShell script which will attempd to deploy Sysmon across ev
 
 # Running
 
-Run ```SYSMONFENCER.ps1``` as domain administrator on domain connected system. Deployment scripts and Sysmon installation files will be uploaded from ```tools/``` directory. **You need to download Sysmon.exe, Sysmon64.exe, Psexec.exe, PSexec64.exe from sysinternals website and place them in "tools" directory. 
+Run ```SYSMONFENCER.ps1``` as domain administrator on domain connected system. Deployment scripts and Sysmon installation files will be uploaded from ```tools/``` directory. **You need to download Sysmon.exe, Sysmon64.exe, Psexec.exe, PSexec64.exe from sysinternals website and place them in "tools" directory.**
 
 From command line it should be run as follows: 
 ```powershell.exe -nop -exec bypass .\SYSMONFENCER.ps1```
@@ -17,6 +17,7 @@ From command line it should be run as follows:
 Usage: powershell .\SYSMONFENCER.ps1 [options]
 
 Options:
+  (no option) Install SYSMON on every single system
   -remove    Remove SYSMON across the domain
   -collect   Collect sysmon evtx files and store them in output directory
   -help      Show this help menu
