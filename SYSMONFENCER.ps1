@@ -262,7 +262,7 @@ help
 Write-Output "[!] Option selected: SYSMON LOG COLLECTION" 
 write-host "[+] Enumerating domain & collecting Sysmon logs"
 fancyCollect $serverListArray
-}elseif($args[0] -eq "-install") 
+}elseif($args[0] -eq "-install") {
 Write-Output "[!] Option selected: SYSMON INSTALLATION" 
 write-host "[+] Enumerating domain & installing Sysmon across every system"
 fancyDeploy $serverListArray
